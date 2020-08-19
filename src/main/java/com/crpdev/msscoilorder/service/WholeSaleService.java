@@ -18,33 +18,32 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class DemoRoomService {
+public class WholeSaleService {
 
     private final CustomerRepository customerRepository;
     private final OilOrderService oilOrderService;
     private final OilOrderRepository oilOrderRepository;
-    private final List<String> beerUpcs = new ArrayList<>(3);
+    private final List<String> oilBarCodes = new ArrayList<>(3);
 
-    public DemoRoomService(CustomerRepository customerRepository, OilOrderService oilOrderService, OilOrderRepository oilOrderRepository) {
+    public WholeSaleService(CustomerRepository customerRepository, OilOrderService oilOrderService, OilOrderRepository oilOrderRepository) {
         this.customerRepository = customerRepository;
         this.oilOrderService = oilOrderService;
         this.oilOrderRepository = oilOrderRepository;
 
-        beerUpcs.add(OilOrderBootstrap.OIL_BARCODE_1);
-        beerUpcs.add(OilOrderBootstrap.OIL_BARCODE_2);
-        beerUpcs.add(OilOrderBootstrap.OIL_BARCODE_3);
+        oilBarCodes.add(OilOrderBootstrap.OIL_BARCODE_1);
+        oilBarCodes.add(OilOrderBootstrap.OIL_BARCODE_2);
+        oilBarCodes.add(OilOrderBootstrap.OIL_BARCODE_3);
     }
 
     @Transactional
     @Scheduled(fixedRate = 2000) //run every 2 seconds
-    public void placeTastingRoomOrder(){
-
+    public void placeWholeSaleOrder(){
         List<Customer> customerList = customerRepository.findAllByCustomerNameLike(OilOrderBootstrap.DEMO_ROOM);
 
         if (customerList.size() == 1){ //should be just one
             doPlaceOrder(customerList.get(0));
         } else {
-            log.error("Too many or too few tasting room customers found");
+            log.error("Too many or too few demo room customers found");
         }
     }
 
@@ -70,6 +69,6 @@ public class DemoRoomService {
     }
 
     private String getRandomBeerUpc() {
-        return beerUpcs.get(new Random().nextInt(beerUpcs.size() -0));
+        return oilBarCodes.get(new Random().nextInt(oilBarCodes.size() -0));
     }
 }
