@@ -13,9 +13,9 @@ import java.util.UUID;
 public class OilOrderBootstrap implements CommandLineRunner {
 
     public static final String DEMO_ROOM = "Demo Room";
-    public static final String OIL_BARCODE_1 = "8005235079489";
-    public static final String OIL_BARCODE_2 = "4987176014894";
-    public static final String OIL_BARCODE_3 = "4987176014893";
+    public static final String OIL_PRODUCTCODE_1 = "8005235079489";
+    public static final String OIL_PRODUCTCODE_2 = "4987176014894";
+    public static final String OIL_PRODUCTCODE_3 = "4987176014893";
 
     private final CustomerRepository customerRepository;
 

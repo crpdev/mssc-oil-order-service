@@ -23,16 +23,16 @@ public class WholeSaleService {
     private final CustomerRepository customerRepository;
     private final OilOrderService oilOrderService;
     private final OilOrderRepository oilOrderRepository;
-    private final List<String> oilBarCodes = new ArrayList<>(3);
+    private final List<String> oilProductCodes = new ArrayList<>(3);
 
     public WholeSaleService(CustomerRepository customerRepository, OilOrderService oilOrderService, OilOrderRepository oilOrderRepository) {
         this.customerRepository = customerRepository;
         this.oilOrderService = oilOrderService;
         this.oilOrderRepository = oilOrderRepository;
 
-        oilBarCodes.add(OilOrderBootstrap.OIL_BARCODE_1);
-        oilBarCodes.add(OilOrderBootstrap.OIL_BARCODE_2);
-        oilBarCodes.add(OilOrderBootstrap.OIL_BARCODE_3);
+        oilProductCodes.add(OilOrderBootstrap.OIL_PRODUCTCODE_1);
+        oilProductCodes.add(OilOrderBootstrap.OIL_PRODUCTCODE_2);
+        oilProductCodes.add(OilOrderBootstrap.OIL_PRODUCTCODE_3);
     }
 
     @Transactional
@@ -48,10 +48,10 @@ public class WholeSaleService {
     }
 
     private void doPlaceOrder(Customer customer) {
-        String beerToOrder = getRandomBeerUpc();
+        String oilToOrder = getRandomOilProductCode();
 
         OilOrderLineDto oilOrderLine = OilOrderLineDto.builder()
-                .barCode(beerToOrder)
+                .productCode(oilToOrder)
                 .orderQuantity(new Random().nextInt(6)) //todo externalize value to property
                 .build();
 
@@ -68,7 +68,7 @@ public class WholeSaleService {
 
     }
 
-    private String getRandomBeerUpc() {
-        return oilBarCodes.get(new Random().nextInt(oilBarCodes.size() -0));
+    private String getRandomOilProductCode() {
+        return oilProductCodes.get(new Random().nextInt(oilProductCodes.size() -0));
     }
 }

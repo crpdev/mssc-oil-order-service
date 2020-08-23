@@ -15,9 +15,9 @@ import java.util.UUID;
 public class OilOrderLineDto extends BaseItem {
 
     @Builder
-    public OilOrderLineDto(UUID id, Integer version, OffsetDateTime createDate, OffsetDateTime lastModifiedDate, String barCode, String oilName, String oilType, UUID oilId, Integer orderQuantity, BigDecimal price) {
+    public OilOrderLineDto(UUID id, Integer version, OffsetDateTime createDate, OffsetDateTime lastModifiedDate, String productCode, String oilName, String oilType, UUID oilId, Integer orderQuantity, BigDecimal price) {
         super(id, version, createDate, lastModifiedDate);
-        this.barCode = barCode;
+        this.productCode = productCode;
         this.oilName = oilName;
         this.oilType = oilType;
         this.oilId = oilId;
@@ -25,7 +25,7 @@ public class OilOrderLineDto extends BaseItem {
         this.price = price;
     }
 
-    private String barCode;
+    private String productCode;
     private String oilName;
     private String oilType;
     private UUID oilId;

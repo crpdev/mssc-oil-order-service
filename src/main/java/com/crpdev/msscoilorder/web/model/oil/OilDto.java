@@ -42,7 +42,7 @@ public class OilDto implements Serializable {
     private OilType oilType;
 
     @NotNull
-    private String barCode;
+    private String productCode;
 
     @NotNull
     @Positive
