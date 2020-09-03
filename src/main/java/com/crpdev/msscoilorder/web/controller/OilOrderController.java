@@ -1,8 +1,8 @@
 package com.crpdev.msscoilorder.web.controller;
 
+import com.crpdev.factory.oil.model.OilOrderDto;
+import com.crpdev.factory.oil.model.OilOrderPagedList;
 import com.crpdev.msscoilorder.service.OilOrderService;
-import com.crpdev.msscoilorder.web.model.OilOrderDto;
-import com.crpdev.msscoilorder.web.model.OilOrderPagedList;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

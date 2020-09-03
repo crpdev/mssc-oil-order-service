@@ -2,7 +2,6 @@ package com.crpdev.msscoilorder.repository;
 
 import com.crpdev.msscoilorder.domain.Customer;
 import com.crpdev.msscoilorder.domain.OilOrder;
-import com.crpdev.msscoilorder.domain.OrderStatusEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +17,7 @@ public interface OilOrderRepository extends JpaRepository<OilOrder, UUID> {
 
     Page<OilOrder> findAllByCustomer(Customer customer, Pageable pageable);
 
-    List<OilOrder> findAllByOrderStatus(OrderStatusEnum orderStatusEnum);
+    List<OilOrder> findAllByOrderStatus(String orderStatus);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     OilOrder findOneById(UUID id);

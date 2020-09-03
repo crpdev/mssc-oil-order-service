@@ -1,11 +1,11 @@
 package com.crpdev.msscoilorder.service;
 
+import com.crpdev.factory.oil.model.OilOrderDto;
+import com.crpdev.factory.oil.model.OilOrderLineDto;
 import com.crpdev.msscoilorder.bootstrap.OilOrderBootstrap;
 import com.crpdev.msscoilorder.domain.Customer;
 import com.crpdev.msscoilorder.repository.CustomerRepository;
 import com.crpdev.msscoilorder.repository.OilOrderRepository;
-import com.crpdev.msscoilorder.web.model.OilOrderDto;
-import com.crpdev.msscoilorder.web.model.OilOrderLineDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

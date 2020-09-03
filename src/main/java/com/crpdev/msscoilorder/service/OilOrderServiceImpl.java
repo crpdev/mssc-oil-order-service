@@ -1,13 +1,13 @@
 package com.crpdev.msscoilorder.service;
 
+import com.crpdev.factory.oil.model.OilOrderDto;
+import com.crpdev.factory.oil.model.OilOrderPagedList;
 import com.crpdev.msscoilorder.domain.Customer;
 import com.crpdev.msscoilorder.domain.OilOrder;
-import com.crpdev.msscoilorder.domain.OrderStatusEnum;
+import com.crpdev.msscoilorder.domain.OilOrderStatusEnum;
 import com.crpdev.msscoilorder.repository.CustomerRepository;
 import com.crpdev.msscoilorder.repository.OilOrderRepository;
 import com.crpdev.msscoilorder.web.mapper.OilOrderMapper;
-import com.crpdev.msscoilorder.web.model.OilOrderDto;
-import com.crpdev.msscoilorder.web.model.OilOrderPagedList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -58,7 +58,7 @@ public class OilOrderServiceImpl implements OilOrderService {
             OilOrder oilOrder = oilOrderMapper.toOilOrder(oilOrderDto);
             oilOrder.setId(null);
             oilOrder.setCustomer(customerOptional.get());
-            oilOrder.setOrderStatus(OrderStatusEnum.NEW);
+            oilOrder.setOrderStatus(OilOrderStatusEnum.NEW.toString());
 
             oilOrder.getOilOrderLines().forEach(line -> line.setOilOrder(oilOrder));
             OilOrder savedOilOrder = oilOrderRepository.saveAndFlush(oilOrder);
@@ -79,7 +79,7 @@ public class OilOrderServiceImpl implements OilOrderService {
     public void pickupOrder(UUID customerId, UUID orderId) {
 
         OilOrder oilOrder = getOrder(customerId, orderId);
-        oilOrder.setOrderStatus(OrderStatusEnum.PICKED_UP);
+        oilOrder.setOrderStatus(OilOrderStatusEnum.PICKED_UP.toString());
         oilOrderRepository.save(oilOrder);
     }
 

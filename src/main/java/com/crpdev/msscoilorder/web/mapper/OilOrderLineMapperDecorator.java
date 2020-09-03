@@ -1,9 +1,9 @@
 package com.crpdev.msscoilorder.web.mapper;
 
+import com.crpdev.factory.oil.model.OilOrderLineDto;
+import com.crpdev.factory.oil.model.oil.OilDto;
 import com.crpdev.msscoilorder.domain.OilOrderLine;
 import com.crpdev.msscoilorder.service.oil.OilService;
-import com.crpdev.msscoilorder.web.model.OilOrderLineDto;
-import com.crpdev.msscoilorder.web.model.oil.OilDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;

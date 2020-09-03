@@ -1,7 +1,7 @@
 package com.crpdev.msscoilorder.web.mapper;
 
+import com.crpdev.factory.oil.model.OilOrderLineDto;
 import com.crpdev.msscoilorder.domain.OilOrderLine;
-import com.crpdev.msscoilorder.web.model.OilOrderLineDto;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 

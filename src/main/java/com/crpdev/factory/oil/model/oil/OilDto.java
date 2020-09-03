@@ -1,4 +1,4 @@
-package com.crpdev.msscoilorder.web.model.oil;
+package com.crpdev.factory.oil.model.oil;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

@@ -1,4 +1,4 @@
-package com.crpdev.msscoilorder.web.model;
+package com.crpdev.factory.oil.model;
 
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

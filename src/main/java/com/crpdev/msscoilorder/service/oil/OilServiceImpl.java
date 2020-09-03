@@ -1,6 +1,6 @@
 package com.crpdev.msscoilorder.service.oil;
 
-import com.crpdev.msscoilorder.web.model.oil.OilDto;
+import com.crpdev.factory.oil.model.oil.OilDto;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;

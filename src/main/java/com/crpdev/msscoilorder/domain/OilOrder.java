@@ -22,7 +22,7 @@ import java.util.UUID;
 public class OilOrder extends BaseEntity {
 
     @Builder
-    public OilOrder(UUID id, Integer version, Timestamp createDate, Timestamp lastModifiedDate, String customerRef, Customer customer, Set<OilOrderLine> oilOrderLines, OrderStatusEnum orderStatusEnum, String orderStatusCallbackUrl) {
+    public OilOrder(UUID id, Integer version, Timestamp createDate, Timestamp lastModifiedDate, String customerRef, Customer customer, Set<OilOrderLine> oilOrderLines, String orderStatus, String orderStatusCallbackUrl) {
         super(id, version, createDate, lastModifiedDate);
         this.customerRef = customerRef;
         this.customer = customer;
@@ -40,6 +40,6 @@ public class OilOrder extends BaseEntity {
     @Fetch(FetchMode.JOIN)
     private Set<OilOrderLine> oilOrderLines;
 
-    private OrderStatusEnum orderStatus = OrderStatusEnum.NEW;
+    private String orderStatus;
     private String orderStatusCallbackUrl;
 }

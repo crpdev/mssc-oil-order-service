@@ -1,4 +1,4 @@
-package com.crpdev.msscoilorder.web.model;
+package com.crpdev.factory.oil.model;
 
 import lombok.Builder;
 import lombok.Data;
@@ -31,4 +31,5 @@ public class OilOrderLineDto extends BaseItem {
     private UUID oilId;
     private Integer orderQuantity = 0;
     private BigDecimal price;
+    private Integer quantityAllocated = 0;
 }

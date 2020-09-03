@@ -1,4 +1,4 @@
-package com.crpdev.msscoilorder.web.model;
+package com.crpdev.factory.oil.model;
 
 import lombok.Builder;
 import lombok.Data;

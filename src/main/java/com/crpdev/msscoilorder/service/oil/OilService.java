@@ -1,6 +1,6 @@
 package com.crpdev.msscoilorder.service.oil;
 
-import com.crpdev.msscoilorder.web.model.oil.OilDto;
+import com.crpdev.factory.oil.model.oil.OilDto;
 
 import java.util.Optional;
 import java.util.UUID;
