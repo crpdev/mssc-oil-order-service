@@ -1,5 +1,6 @@
 package com.crpdev.msscoilorder.service;
 
+import com.crpdev.factory.oil.model.OilOrderDto;
 import com.crpdev.factory.oil.model.events.ValidateOrderResult;
 import com.crpdev.msscoilorder.domain.OilOrder;
 import com.crpdev.msscoilorder.domain.OilOrderEventEnum;
@@ -53,6 +54,37 @@ public class OilOrderManagerImpl implements OilOrderManager {
         } else {
             sendOilOrderEvent(oilOrder, OilOrderEventEnum.VALIDATION_FAILED);
         }
+    }
+
+    @Override
+    public void oilOrderAllocationPassed(OilOrderDto oilOrderDto) {
+        OilOrder oilOrder = oilOrderRepository.getOne(oilOrderDto.getId());
+        sendOilOrderEvent(oilOrder, OilOrderEventEnum.ALLOCATION_SUCCESS);
+        updateAllocatedQty(oilOrderDto);
+    }
+
+    private void updateAllocatedQty(OilOrderDto oilOrderDto) {
+        OilOrder allocatedOrder = oilOrderRepository.getOne(oilOrderDto.getId());
+        allocatedOrder.getOilOrderLines().forEach(oilOrderLine -> {
+           oilOrderDto.getOilOrderLines().forEach(oilOrderLineDto -> {
+               if (oilOrderLine.getId().equals(oilOrderLineDto.getId())){
+                   oilOrderLine.setQuantityAllocated(oilOrderLineDto.getQuantityAllocated());
+               }
+           });
+        });
+        oilOrderRepository.saveAndFlush(allocatedOrder);
+    }
+
+    @Override
+    public void oilOrderAllocationPendingInventory(OilOrderDto oilOrderDto) {
+        OilOrder oilOrder = oilOrderRepository.getOne(oilOrderDto.getId());
+        sendOilOrderEvent(oilOrder, OilOrderEventEnum.ALLOCATION_NO_INVENTORY);
+    }
+
+    @Override
+    public void oilOrderAllocationFailed(OilOrderDto oilOrderDto) {
+        OilOrder oilOrder = oilOrderRepository.getOne(oilOrderDto.getId());
+        sendOilOrderEvent(oilOrder, OilOrderEventEnum.ALLOCATION_FAILED);
     }
 
     private void sendOilOrderEvent(OilOrder oilOrder, OilOrderEventEnum eventEnum) {

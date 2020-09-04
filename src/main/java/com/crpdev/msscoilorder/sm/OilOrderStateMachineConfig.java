@@ -54,6 +54,15 @@ public class OilOrderStateMachineConfig extends StateMachineConfigurerAdapter<Oi
                     .source(OilOrderStatusEnum.VALIDATED).target(OilOrderStatusEnum.ALLOCATION_PENDING)
                     .event(OilOrderEventEnum.ALLOCATE_ORDER)
                     .action(allocateOrderAction)
+                .and().withExternal()
+                    .source(OilOrderStatusEnum.ALLOCATION_PENDING).target(OilOrderStatusEnum.ALLOCATED)
+                    .event(OilOrderEventEnum.ALLOCATION_SUCCESS)
+                .and().withExternal()
+                    .source(OilOrderStatusEnum.ALLOCATION_PENDING).target(OilOrderStatusEnum.ALLOCATION_EXCEPTION)
+                    .event(OilOrderEventEnum.ALLOCATION_FAILED)
+                .and().withExternal()
+                    .source(OilOrderStatusEnum.ALLOCATION_PENDING).target(OilOrderStatusEnum.PENDING_INVENTORY)
+                    .event(OilOrderEventEnum.ALLOCATION_NO_INVENTORY)
                 ;
     }
 }

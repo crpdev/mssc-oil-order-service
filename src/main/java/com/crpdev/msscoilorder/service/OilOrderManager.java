@@ -1,5 +1,6 @@
 package com.crpdev.msscoilorder.service;
 
+import com.crpdev.factory.oil.model.OilOrderDto;
 import com.crpdev.factory.oil.model.events.ValidateOrderResult;
 import com.crpdev.msscoilorder.domain.OilOrder;
 
@@ -13,4 +14,10 @@ public interface OilOrderManager {
     OilOrder newOilOrder(OilOrder oilOrder);
 
     void processValidationResult(ValidateOrderResult result);
+
+    void oilOrderAllocationPassed(OilOrderDto oilOrderDto);
+
+    void oilOrderAllocationPendingInventory(OilOrderDto oilOrderDto);
+
+    void oilOrderAllocationFailed(OilOrderDto oilOrderDto);
 }

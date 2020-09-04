@@ -21,6 +21,7 @@ public class JmsConfig {
     public static final String VALIDATE_ORDER_QUEUE = "validate-order";
     public static final String VALIDATE_RESPONSE_QUEUE = "validate-order-result";
     public static final String ALLOCATE_ORDER_QUEUE = "allocate-order";
+    public static final String ALLOCATE_ORDER_RESPONSE_QUEUE = "allocate-order-response";
 
     private final ObjectMapper objectMapper;
 
