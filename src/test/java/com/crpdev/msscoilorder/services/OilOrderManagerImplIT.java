@@ -4,6 +4,7 @@ import com.crpdev.factory.oil.model.oil.OilDto;
 import com.crpdev.msscoilorder.domain.Customer;
 import com.crpdev.msscoilorder.domain.OilOrder;
 import com.crpdev.msscoilorder.domain.OilOrderLine;
+import com.crpdev.msscoilorder.domain.OilOrderStatusEnum;
 import com.crpdev.msscoilorder.repository.CustomerRepository;
 import com.crpdev.msscoilorder.repository.OilOrderRepository;
 import com.crpdev.msscoilorder.service.OilOrderManager;
@@ -29,6 +30,8 @@ import static com.github.jenspiegsa.wiremockextension.ManagedWireMockServer.with
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -86,10 +89,15 @@ public class OilOrderManagerImplIT {
         //OilPagedList oilOrderPagedList = new OilPagedList(Arrays.asList(oilDto));
         wireMockServer.stubFor(get(OilServiceImpl.OIL_PRODUCTCODE_PATH_V1 + "123").willReturn(okJson(objectMapper.writeValueAsString(oilDto))));
         OilOrder oilOrder = createOilOrder();
-        Thread.sleep(5000);
         OilOrder savedOilOrder = oilOrderManager.newOilOrder(oilOrder);
+        //Thread.sleep(5000); // Use Awaitility instead of sleep
+
+        await().untilAsserted(() -> {
+            OilOrder foundOrder = oilOrderRepository.findById(oilOrder.getId()).get();
+            assertEquals(OilOrderStatusEnum.ALLOCATED, foundOrder.getOrderStatus());
+        });
+
         assertNotNull(savedOilOrder);
-        //assertEquals(OilOrderStatusEnum.ALLOCATED, savedOilOrder.getOrderStatus());
     }
 
     private OilOrder createOilOrder() {

@@ -64,12 +64,14 @@ public class OilOrderManagerImpl implements OilOrderManager {
         }
     }
 
+    @Transactional
     @Override
     public void oilOrderAllocationPassed(OilOrderDto oilOrderDto) {
         OilOrder oilOrder = oilOrderRepository.getOne(oilOrderDto.getId());
         sendOilOrderEvent(oilOrder, OilOrderEventEnum.ALLOCATION_SUCCESS);
         updateAllocatedQty(oilOrderDto);
     }
+
 
     private void updateAllocatedQty(OilOrderDto oilOrderDto) {
         OilOrder allocatedOrder = oilOrderRepository.getOne(oilOrderDto.getId());

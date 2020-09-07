@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderAllocationResultListener {
 
-    private OilOrderManager oilOrderManager;
+    private final OilOrderManager oilOrderManager;
 
     @JmsListener(destination = JmsConfig.ALLOCATE_ORDER_RESPONSE_QUEUE)
     public void listen(AllocateOrderResult result){
