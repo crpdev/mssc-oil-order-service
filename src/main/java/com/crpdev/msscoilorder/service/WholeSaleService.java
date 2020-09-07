@@ -8,7 +8,6 @@ import com.crpdev.msscoilorder.repository.CustomerRepository;
 import com.crpdev.msscoilorder.repository.OilOrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-@Service
+//@Service
 @Slf4j
 public class WholeSaleService {
 

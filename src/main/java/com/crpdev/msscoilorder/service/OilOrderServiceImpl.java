@@ -58,7 +58,7 @@ public class OilOrderServiceImpl implements OilOrderService {
             OilOrder oilOrder = oilOrderMapper.toOilOrder(oilOrderDto);
             oilOrder.setId(null);
             oilOrder.setCustomer(customerOptional.get());
-            oilOrder.setOrderStatus(OilOrderStatusEnum.NEW.toString());
+            oilOrder.setOrderStatus(OilOrderStatusEnum.NEW);
 
             oilOrder.getOilOrderLines().forEach(line -> line.setOilOrder(oilOrder));
             OilOrder savedOilOrder = oilOrderRepository.saveAndFlush(oilOrder);
@@ -79,7 +79,7 @@ public class OilOrderServiceImpl implements OilOrderService {
     public void pickupOrder(UUID customerId, UUID orderId) {
 
         OilOrder oilOrder = getOrder(customerId, orderId);
-        oilOrder.setOrderStatus(OilOrderStatusEnum.PICKED_UP.toString());
+        oilOrder.setOrderStatus(OilOrderStatusEnum.PICKED_UP);
         oilOrderRepository.save(oilOrder);
     }
 

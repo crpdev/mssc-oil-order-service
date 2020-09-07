@@ -13,6 +13,7 @@ import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.support.StateMachineInterceptorAdapter;
 import org.springframework.statemachine.transition.Transition;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -30,14 +31,16 @@ public class OilOrderStateChangeInterceptor extends StateMachineInterceptorAdapt
 
     private final OilOrderRepository oilOrderRepository;
 
+    @Transactional
     @Override
     public void preStateChange(State<OilOrderStatusEnum, OilOrderEventEnum> state, Message<OilOrderEventEnum> message, Transition<OilOrderStatusEnum, OilOrderEventEnum> transition, StateMachine<OilOrderStatusEnum, OilOrderEventEnum> stateMachine) {
-            Optional.ofNullable(message).ifPresent(msg -> {
+        log.debug("<<< Received Interceptor Action >>> " + state.getId());
+        Optional.ofNullable(message).ifPresent(msg -> {
                 Optional.ofNullable((String)(msg.getHeaders().getOrDefault(OilOrderManagerImpl.ORDER_ID_HEADER, -1)))
                         .ifPresent(orderId -> {
-                            log.debug("<<< Change of State >>> " + state.getId());
+                            log.debug("<<< Change of State >>> " + state.getId() + " For Order Id: " + orderId);
                             OilOrder oilOrder = oilOrderRepository.getOne(UUID.fromString(orderId));
-                            oilOrder.setOrderStatus(state.getId().toString());
+                            oilOrder.setOrderStatus(state.getId());
                             oilOrderRepository.saveAndFlush(oilOrder);//Hibernate does a lazy write by default. Forcing immediate write using saveAndFlush
                         });
             });

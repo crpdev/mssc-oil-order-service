@@ -13,8 +13,8 @@ import java.util.UUID;
 @Service
 public class OilServiceImpl implements OilService {
 
-    private static final String OIL_PATH_V1 = "/api/v1/oil/";
-    private static final String OIL_BARCODE_PATH_V1 = "/api/v1/oil/barCode/";
+    public static final String OIL_PATH_V1 = "/api/v1/oil/";
+    public static final String OIL_PRODUCTCODE_PATH_V1 = "/api/v1/oil/productCode/";
 
     private final RestTemplate restTemplate;
 
@@ -34,7 +34,7 @@ public class OilServiceImpl implements OilService {
     }
 
     @Override
-    public Optional<OilDto> getOilByBarCode(String barCode) {
-        return Optional.of(restTemplate.getForObject(oilServiceHost + OIL_BARCODE_PATH_V1 + barCode, OilDto.class));
+    public Optional<OilDto> getOilByProductCode(String productCode) {
+        return Optional.of(restTemplate.getForObject(oilServiceHost + OIL_PRODUCTCODE_PATH_V1 + productCode, OilDto.class));
     }
 }

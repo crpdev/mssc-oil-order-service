@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface OilService {
 
     Optional<OilDto> getOilById(UUID oilId);
-    Optional<OilDto> getOilByBarCode(String barCode);
+    Optional<OilDto> getOilByProductCode(String barCode);
 }

@@ -26,10 +26,10 @@ public abstract class OilOrderLineMapperDecorator implements OilOrderLineMapper 
     @Override
     public OilOrderLineDto toOilOrderLineDto(OilOrderLine oilOrderLine) {
         OilOrderLineDto dto = oilOrderLineMapper.toOilOrderLineDto(oilOrderLine);
-        Optional<OilDto> oilDtoOptional = oilService.getOilByBarCode(oilOrderLine.getProductCode());
+        Optional<OilDto> oilDtoOptional = oilService.getOilByProductCode(oilOrderLine.getProductCode());
         oilDtoOptional.ifPresent(oilDto -> {
             dto.setOilName(oilDto.getOilName());
-            dto.setOilType(oilDto.getOilType().toString());
+            dto.setOilType(oilDto.getOilType());
             dto.setOilId(oilDto.getId());
             dto.setPrice(oilDto.getPrice());
         });

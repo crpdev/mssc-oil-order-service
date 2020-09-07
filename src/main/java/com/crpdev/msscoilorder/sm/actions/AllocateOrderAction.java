@@ -34,9 +34,10 @@ public class AllocateOrderAction implements Action<OilOrderStatusEnum, OilOrderE
 
     @Override
     public void execute(StateContext<OilOrderStatusEnum, OilOrderEventEnum> stateContext) {
+        log.debug("<<< Received Allocation Request");
         final String oilOrderId = (String)stateContext.getMessageHeader(OilOrderManagerImpl.ORDER_ID_HEADER);
-        final OilOrder oilOrder = oilOrderRepository.findOneById(UUID.fromString(oilOrderId));
-
+        final OilOrder oilOrder = oilOrderRepository.findById(UUID.fromString(oilOrderId)).get();
+        log.debug("<<< Processing Allocation Request For Order Id: " + oilOrder.getId() + " with Status: "  + oilOrder.getOrderStatus());
         jmsTemplate.convertAndSend(JmsConfig.ALLOCATE_ORDER_QUEUE, AllocateOrderRequest.builder()
                     .oilOrderDto(oilOrderMapper.toOilOrderDto(oilOrder)).build());
 

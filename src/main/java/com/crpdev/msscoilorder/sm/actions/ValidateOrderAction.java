@@ -35,6 +35,7 @@ public class ValidateOrderAction implements Action<OilOrderStatusEnum, OilOrderE
     @Override
     public void execute(StateContext<OilOrderStatusEnum, OilOrderEventEnum> stateContext) {
         String oilOrderId = (String)stateContext.getMessageHeader(OilOrderManagerImpl.ORDER_ID_HEADER);
+        log.debug("Validation Request received for Order Id: " + oilOrderId);
         OilOrder oilOrder = oilOrderRepository.getOne(UUID.fromString(oilOrderId));
 
         jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_QUEUE, ValidateOrderRequest.builder()

@@ -15,6 +15,7 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by rajapandian
@@ -33,24 +34,31 @@ public class OilOrderManagerImpl implements OilOrderManager {
     private final OilOrderRepository oilOrderRepository;
     private final OilOrderStateChangeInterceptor oilOrderStateChangeInterceptor;
 
+    @Transactional
     @Override
     public OilOrder newOilOrder(OilOrder oilOrder) {
         oilOrder.setId(null);
-        oilOrder.setOrderStatus(OilOrderStatusEnum.NEW.toString());
+        oilOrder.setOrderStatus(OilOrderStatusEnum.NEW);
         OilOrder savedOilOrder = oilOrderRepository.save(oilOrder);
+        log.debug("Saved Oil Order: " + savedOilOrder.getId());
         sendOilOrderEvent(savedOilOrder, OilOrderEventEnum.VALIDATE_ORDER);
+        log.debug("Saved Oil Order State: " + savedOilOrder.getOrderStatus());
         return savedOilOrder;
     }
 
+    @Transactional
     @Override
     public void processValidationResult(ValidateOrderResult result) {
+        log.debug("<<< Processing Validation Result For Order Id: " + result.getOrderId());
         OilOrder oilOrder = oilOrderRepository.getOne(result.getOrderId());
 
         if (result.getIsValid()){
+            log.debug("<<< Sending Validation Passed Event For Order Id: " + result.getOrderId());
             sendOilOrderEvent(oilOrder, OilOrderEventEnum.VALIDATION_PASSED);
-            OilOrder validatedOrder = oilOrderRepository.findOneById(oilOrder.getId());
+            OilOrder validatedOrder = oilOrderRepository.findById(oilOrder.getId()).get();
+            log.debug("<<< Validated Order Id: " + result.getOrderId() + ": Status: " + validatedOrder.getOrderStatus());
             sendOilOrderEvent(validatedOrder, OilOrderEventEnum.ALLOCATE_ORDER);
-
+            log.debug("<<< Sending Allocate Order Event For Order Id: " + result.getOrderId());
         } else {
             sendOilOrderEvent(oilOrder, OilOrderEventEnum.VALIDATION_FAILED);
         }
@@ -92,10 +100,12 @@ public class OilOrderManagerImpl implements OilOrderManager {
         Message msg = MessageBuilder.withPayload(eventEnum)
                 .setHeader(ORDER_ID_HEADER, oilOrder.getId().toString())
                 .build();
+        log.debug("Sent Oil Order Event For OrderId: " + oilOrder.getId() + " with Event: " + eventEnum);
         sm.sendEvent(msg);
     }
 
     private StateMachine<OilOrderStatusEnum, OilOrderEventEnum> build(OilOrder oilOrder) {
+        log.debug("Building State Machine For OrderId: " + oilOrder.getId());
         StateMachine<OilOrderStatusEnum, OilOrderEventEnum> sm = smFactory.getStateMachine(oilOrder.getId());
         sm.stop();
         sm.getStateMachineAccessor()
@@ -103,6 +113,7 @@ public class OilOrderManagerImpl implements OilOrderManager {
                     sma.addStateMachineInterceptor(oilOrderStateChangeInterceptor);
                     sma.resetStateMachine(new DefaultStateMachineContext(oilOrder.getOrderStatus(), null, null, null));
                 });
+        sm.start();
         return sm;
     }
 }
