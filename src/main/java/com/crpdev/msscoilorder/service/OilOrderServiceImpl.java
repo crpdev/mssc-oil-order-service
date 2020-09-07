@@ -8,6 +8,7 @@ import com.crpdev.msscoilorder.domain.OilOrderStatusEnum;
 import com.crpdev.msscoilorder.repository.CustomerRepository;
 import com.crpdev.msscoilorder.repository.OilOrderRepository;
 import com.crpdev.msscoilorder.web.mapper.OilOrderMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -22,19 +23,14 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class OilOrderServiceImpl implements OilOrderService {
 
     private final OilOrderRepository oilOrderRepository;
     private final CustomerRepository customerRepository;
     private final OilOrderMapper oilOrderMapper;
-    private final ApplicationEventPublisher publisher;
+    private final OilOrderManager oilOrderManager;
 
-    public OilOrderServiceImpl(OilOrderRepository oilOrderRepository, CustomerRepository customerRepository, OilOrderMapper oilOrderMapper, ApplicationEventPublisher publisher) {
-        this.oilOrderRepository = oilOrderRepository;
-        this.customerRepository = customerRepository;
-        this.oilOrderMapper = oilOrderMapper;
-        this.publisher = publisher;
-    }
 
     @Override
     public OilOrderPagedList listOrders(UUID customerId, Pageable pageable) {
@@ -61,7 +57,7 @@ public class OilOrderServiceImpl implements OilOrderService {
             oilOrder.setOrderStatus(OilOrderStatusEnum.NEW);
 
             oilOrder.getOilOrderLines().forEach(line -> line.setOilOrder(oilOrder));
-            OilOrder savedOilOrder = oilOrderRepository.saveAndFlush(oilOrder);
+            OilOrder savedOilOrder = oilOrderManager.newOilOrder(oilOrder);
 
             log.debug("Saved Oil Order: " + savedOilOrder.getId());
             return oilOrderMapper.toOilOrderDto(savedOilOrder);
@@ -75,12 +71,10 @@ public class OilOrderServiceImpl implements OilOrderService {
         return oilOrderMapper.toOilOrderDto(getOrder(customerId, orderId));
     }
 
+    @Transactional
     @Override
     public void pickupOrder(UUID customerId, UUID orderId) {
-
-        OilOrder oilOrder = getOrder(customerId, orderId);
-        oilOrder.setOrderStatus(OilOrderStatusEnum.PICKED_UP);
-        oilOrderRepository.save(oilOrder);
+        oilOrderManager.pickupOrder(orderId);
     }
 
     private OilOrder getOrder(UUID customerId, UUID orderId){

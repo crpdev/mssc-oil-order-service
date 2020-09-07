@@ -97,6 +97,13 @@ public class OilOrderManagerImplIT {
             assertEquals(OilOrderStatusEnum.ALLOCATED, foundOrder.getOrderStatus());
         });
 
+        oilOrderManager.pickupOrder(oilOrder.getId());
+
+        await().untilAsserted(() -> {
+            OilOrder pickedOrder = oilOrderRepository.findById(oilOrder.getId()).get();
+            assertEquals(OilOrderStatusEnum.PICKED_UP, pickedOrder.getOrderStatus());
+        });
+
         assertNotNull(savedOilOrder);
     }
 

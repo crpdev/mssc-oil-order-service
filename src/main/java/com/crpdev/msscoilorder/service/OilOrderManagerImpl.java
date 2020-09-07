@@ -17,6 +17,8 @@ import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 /**
  * Created by rajapandian
  * Date: 01/09/20
@@ -67,7 +69,7 @@ public class OilOrderManagerImpl implements OilOrderManager {
     @Transactional
     @Override
     public void oilOrderAllocationPassed(OilOrderDto oilOrderDto) {
-        OilOrder oilOrder = oilOrderRepository.getOne(oilOrderDto.getId());
+        OilOrder oilOrder = oilOrderRepository.findById(oilOrderDto.getId()).get();
         sendOilOrderEvent(oilOrder, OilOrderEventEnum.ALLOCATION_SUCCESS);
         updateAllocatedQty(oilOrderDto);
     }
@@ -83,6 +85,14 @@ public class OilOrderManagerImpl implements OilOrderManager {
            });
         });
         oilOrderRepository.saveAndFlush(allocatedOrder);
+    }
+
+    @Transactional
+    @Override
+    public void pickupOrder(UUID oilId) {
+        log.debug("<<< Processing Order Pickup For Order Id: " + oilId);
+        OilOrder oilOrder = oilOrderRepository.findById(oilId).get();
+        sendOilOrderEvent(oilOrder, OilOrderEventEnum.ORDER_PICKED_UP);
     }
 
     @Override

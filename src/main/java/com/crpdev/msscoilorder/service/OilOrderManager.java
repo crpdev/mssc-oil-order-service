@@ -4,6 +4,8 @@ import com.crpdev.factory.oil.model.OilOrderDto;
 import com.crpdev.factory.oil.model.events.ValidateOrderResult;
 import com.crpdev.msscoilorder.domain.OilOrder;
 
+import java.util.UUID;
+
 /**
  * Created by rajapandian
  * Date: 01/09/20
@@ -20,4 +22,6 @@ public interface OilOrderManager {
     void oilOrderAllocationPendingInventory(OilOrderDto oilOrderDto);
 
     void oilOrderAllocationFailed(OilOrderDto oilOrderDto);
+
+    void pickupOrder(UUID oilId);
 }

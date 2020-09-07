@@ -70,6 +70,9 @@ public class OilOrderStateMachineConfig extends StateMachineConfigurerAdapter<Oi
                 .and().withExternal()
                     .source(OilOrderStatusEnum.ALLOCATION_PENDING).target(OilOrderStatusEnum.PENDING_INVENTORY)
                     .event(OilOrderEventEnum.ALLOCATION_NO_INVENTORY)
+                .and().withExternal()
+                    .source(OilOrderStatusEnum.ALLOCATED).target(OilOrderStatusEnum.PICKED_UP)
+                    .event(OilOrderEventEnum.ORDER_PICKED_UP)
                 ;
     }
 
