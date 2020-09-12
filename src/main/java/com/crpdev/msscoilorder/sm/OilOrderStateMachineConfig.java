@@ -3,6 +3,8 @@ package com.crpdev.msscoilorder.sm;
 import com.crpdev.msscoilorder.domain.OilOrderEventEnum;
 import com.crpdev.msscoilorder.domain.OilOrderStatusEnum;
 import com.crpdev.msscoilorder.sm.actions.AllocateOrderAction;
+import com.crpdev.msscoilorder.sm.actions.CancelOrderAction;
+import com.crpdev.msscoilorder.sm.actions.DeAllocateOrderAction;
 import com.crpdev.msscoilorder.sm.actions.ValidateOrderAction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,8 @@ public class OilOrderStateMachineConfig extends StateMachineConfigurerAdapter<Oi
 
     private final ValidateOrderAction validateOrderAction;
     private final AllocateOrderAction allocateOrderAction;
+    private final DeAllocateOrderAction deAllocateOrderAction;
+    private final CancelOrderAction cancelOrderAction;
 
     @Override
     public void configure(StateMachineStateConfigurer<OilOrderStatusEnum, OilOrderEventEnum> states) throws Exception {
@@ -58,9 +62,17 @@ public class OilOrderStateMachineConfig extends StateMachineConfigurerAdapter<Oi
                     .source(OilOrderStatusEnum.VALIDATION_PENDING).target(OilOrderStatusEnum.VALIDATION_EXCEPTION)
                     .event(OilOrderEventEnum.VALIDATION_FAILED)
                 .and().withExternal()
+                    .source(OilOrderStatusEnum.VALIDATION_PENDING).target(OilOrderStatusEnum.CANCELLED)
+                    .event(OilOrderEventEnum.CANCEL_ORDER)
+                    .action(cancelOrderAction)
+                .and().withExternal()
                     .source(OilOrderStatusEnum.VALIDATED).target(OilOrderStatusEnum.ALLOCATION_PENDING)
                     .event(OilOrderEventEnum.ALLOCATE_ORDER)
                     .action(allocateOrderAction)
+                .and().withExternal()
+                    .source(OilOrderStatusEnum.ALLOCATION_PENDING).target(OilOrderStatusEnum.CANCELLED)
+                    .event(OilOrderEventEnum.CANCEL_ORDER)
+                    .action(cancelOrderAction)
                 .and().withExternal()
                     .source(OilOrderStatusEnum.ALLOCATION_PENDING).target(OilOrderStatusEnum.ALLOCATED)
                     .event(OilOrderEventEnum.ALLOCATION_SUCCESS)
@@ -70,6 +82,10 @@ public class OilOrderStateMachineConfig extends StateMachineConfigurerAdapter<Oi
                 .and().withExternal()
                     .source(OilOrderStatusEnum.ALLOCATION_PENDING).target(OilOrderStatusEnum.PENDING_INVENTORY)
                     .event(OilOrderEventEnum.ALLOCATION_NO_INVENTORY)
+                .and().withExternal()
+                    .source(OilOrderStatusEnum.ALLOCATED).target(OilOrderStatusEnum.CANCELLED)
+                    .event(OilOrderEventEnum.CANCEL_ORDER)
+                    .action(deAllocateOrderAction)
                 .and().withExternal()
                     .source(OilOrderStatusEnum.ALLOCATED).target(OilOrderStatusEnum.PICKED_UP)
                     .event(OilOrderEventEnum.ORDER_PICKED_UP)

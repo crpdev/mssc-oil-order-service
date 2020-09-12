@@ -24,10 +24,13 @@ public class OrderAllocationResultListener {
     @JmsListener(destination = JmsConfig.ALLOCATE_ORDER_RESPONSE_QUEUE)
     public void listen(AllocateOrderResult result){
         if (!result.getAllocationError() && !result.getPendingInventory()){
+            log.debug("Allocation Success");
             oilOrderManager.oilOrderAllocationPassed(result.getOilOrderDto());
         } else if (!result.getAllocationError() && result.getPendingInventory()){
+            log.debug("Pending Inventory");
             oilOrderManager.oilOrderAllocationPendingInventory(result.getOilOrderDto());
         } else if (result.getAllocationError()){
+            log.debug("Allocation Exception");
             oilOrderManager.oilOrderAllocationFailed(result.getOilOrderDto());
         }
     }

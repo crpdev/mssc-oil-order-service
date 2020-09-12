@@ -30,16 +30,24 @@ public class OilOrderAllocationListener {
         AllocateOrderRequest request = (AllocateOrderRequest) msg.getPayload();
         log.debug("Allocation event message received for Order Id: " + request.getOilOrderDto().getId());
 
-        request.getOilOrderDto().getOilOrderLines().forEach(oilOrderLineDto -> {
-            log.debug("Processing Order Lines: " + oilOrderLineDto.getOrderQuantity());
-            oilOrderLineDto.setQuantityAllocated(oilOrderLineDto.getOrderQuantity());
-        });
+
+        final Boolean allocationError = "allocation-exception".equals(request.getOilOrderDto().getCustomerRef()) ? true : false;
+        final Boolean pendingInventory = "pending-inventory".equals(request.getOilOrderDto().getCustomerRef()) ? true : false;
+
+        if (allocationError || pendingInventory) {
+            log.debug("Exceptional cases for Allocation");
+        } else {
+            request.getOilOrderDto().getOilOrderLines().forEach(oilOrderLineDto -> {
+                log.debug("Processing Order Lines: " + oilOrderLineDto.getOrderQuantity());
+                oilOrderLineDto.setQuantityAllocated(oilOrderLineDto.getOrderQuantity());
+            });
+        }
 
         log.debug("Sending Allocation Response");
         jmsTemplate.convertAndSend(JmsConfig.ALLOCATE_ORDER_RESPONSE_QUEUE, AllocateOrderResult.builder()
                 .oilOrderDto(request.getOilOrderDto())
-                .allocationError(false)
-                .pendingInventory(false)
+                .allocationError(allocationError)
+                .pendingInventory(pendingInventory)
                 .build());
 
     }

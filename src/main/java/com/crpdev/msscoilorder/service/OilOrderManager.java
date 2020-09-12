@@ -23,5 +23,7 @@ public interface OilOrderManager {
 
     void oilOrderAllocationFailed(OilOrderDto oilOrderDto);
 
-    void pickupOrder(UUID oilId);
+    void pickupOrder(UUID orderId);
+
+    void cancelOrder(UUID orderId);
 }

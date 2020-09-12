@@ -26,8 +26,12 @@ public class OilOrderValidationListener {
     @JmsListener(destination = JmsConfig.VALIDATE_ORDER_QUEUE)
     public void listen(Message msg){
         ValidateOrderRequest request = (ValidateOrderRequest) msg.getPayload();
+
+        final Boolean isValid = "pending-validation".equals(request.getOilOrderDto().getCustomerRef()) ? false : true;
+
+
         jmsTemplate.convertAndSend(JmsConfig.VALIDATE_RESPONSE_QUEUE, ValidateOrderResult.builder()
-            .isValid(true)
+            .isValid(isValid)
             .orderId(request.getOilOrderDto().getId())
             .build());
     }

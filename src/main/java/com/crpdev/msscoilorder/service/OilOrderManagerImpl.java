@@ -89,18 +89,28 @@ public class OilOrderManagerImpl implements OilOrderManager {
 
     @Transactional
     @Override
-    public void pickupOrder(UUID oilId) {
-        log.debug("<<< Processing Order Pickup For Order Id: " + oilId);
-        OilOrder oilOrder = oilOrderRepository.findById(oilId).get();
+    public void pickupOrder(UUID orderId) {
+        log.debug("<<< Processing Order Pickup For Order Id: " + orderId);
+        OilOrder oilOrder = oilOrderRepository.findById(orderId).get();
         sendOilOrderEvent(oilOrder, OilOrderEventEnum.ORDER_PICKED_UP);
     }
 
+    @Transactional
+    @Override
+    public void cancelOrder(UUID orderId) {
+        log.debug("<<< Processing Cancel Order For Order Id: " + orderId);
+        OilOrder oilOrder = oilOrderRepository.findById(orderId).get();
+        sendOilOrderEvent(oilOrder, OilOrderEventEnum.CANCEL_ORDER);
+    }
+
+    @Transactional
     @Override
     public void oilOrderAllocationPendingInventory(OilOrderDto oilOrderDto) {
         OilOrder oilOrder = oilOrderRepository.getOne(oilOrderDto.getId());
         sendOilOrderEvent(oilOrder, OilOrderEventEnum.ALLOCATION_NO_INVENTORY);
     }
 
+    @Transactional
     @Override
     public void oilOrderAllocationFailed(OilOrderDto oilOrderDto) {
         OilOrder oilOrder = oilOrderRepository.getOne(oilOrderDto.getId());

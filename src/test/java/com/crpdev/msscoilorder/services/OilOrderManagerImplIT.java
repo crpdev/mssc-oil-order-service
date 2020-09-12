@@ -83,7 +83,82 @@ public class OilOrderManagerImplIT {
     }
 
     @Test
-    void testNewToAllocated() throws JsonProcessingException, InterruptedException {
+    void testNewToAllocated() throws JsonProcessingException {
+
+        OilDto oilDto = OilDto.builder().id(oilId).productCode("123").build();
+        //OilPagedList oilOrderPagedList = new OilPagedList(Arrays.asList(oilDto));
+        wireMockServer.stubFor(get(OilServiceImpl.OIL_PRODUCTCODE_PATH_V1 + "123").willReturn(okJson(objectMapper.writeValueAsString(oilDto))));
+        OilOrder oilOrder = createOilOrder();
+        OilOrder savedOilOrder = oilOrderManager.newOilOrder(oilOrder);
+        //Thread.sleep(5000); // Use Awaitility instead of sleep
+
+        await().untilAsserted(() -> {
+            OilOrder foundOrder = oilOrderRepository.findById(oilOrder.getId()).get();
+            assertEquals(OilOrderStatusEnum.ALLOCATED, foundOrder.getOrderStatus());
+        });
+
+        assertNotNull(savedOilOrder);
+    }
+
+    @Test
+    void testNewToValidationException() throws JsonProcessingException {
+
+        OilDto oilDto = OilDto.builder().id(oilId).productCode("123").build();
+        //OilPagedList oilOrderPagedList = new OilPagedList(Arrays.asList(oilDto));
+        wireMockServer.stubFor(get(OilServiceImpl.OIL_PRODUCTCODE_PATH_V1 + "123").willReturn(okJson(objectMapper.writeValueAsString(oilDto))));
+        OilOrder oilOrder = createOilOrder();
+        oilOrder.setCustomerRef("pending-validation");
+        OilOrder savedOilOrder = oilOrderManager.newOilOrder(oilOrder);
+        //Thread.sleep(5000); // Use Awaitility instead of sleep
+
+        await().untilAsserted(() -> {
+            OilOrder foundOrder = oilOrderRepository.findById(oilOrder.getId()).get();
+            assertEquals(OilOrderStatusEnum.VALIDATION_EXCEPTION, foundOrder.getOrderStatus());
+        });
+
+        assertNotNull(savedOilOrder);
+    }
+
+    @Test
+    void testNewToPendingInventory() throws JsonProcessingException {
+
+        OilDto oilDto = OilDto.builder().id(oilId).productCode("123").build();
+        //OilPagedList oilOrderPagedList = new OilPagedList(Arrays.asList(oilDto));
+        wireMockServer.stubFor(get(OilServiceImpl.OIL_PRODUCTCODE_PATH_V1 + "123").willReturn(okJson(objectMapper.writeValueAsString(oilDto))));
+        OilOrder oilOrder = createOilOrder();
+        oilOrder.setCustomerRef("pending-inventory");
+        OilOrder savedOilOrder = oilOrderManager.newOilOrder(oilOrder);
+        //Thread.sleep(5000); // Use Awaitility instead of sleep
+
+        await().untilAsserted(() -> {
+            OilOrder foundOrder = oilOrderRepository.findById(oilOrder.getId()).get();
+            assertEquals(OilOrderStatusEnum.PENDING_INVENTORY, foundOrder.getOrderStatus());
+        });
+
+        assertNotNull(savedOilOrder);
+    }
+
+    @Test
+    void testNewToAllocationException() throws JsonProcessingException {
+
+        OilDto oilDto = OilDto.builder().id(oilId).productCode("123").build();
+        //OilPagedList oilOrderPagedList = new OilPagedList(Arrays.asList(oilDto));
+        wireMockServer.stubFor(get(OilServiceImpl.OIL_PRODUCTCODE_PATH_V1 + "123").willReturn(okJson(objectMapper.writeValueAsString(oilDto))));
+        OilOrder oilOrder = createOilOrder();
+        oilOrder.setCustomerRef("allocation-exception");
+        OilOrder savedOilOrder = oilOrderManager.newOilOrder(oilOrder);
+        //Thread.sleep(5000); // Use Awaitility instead of sleep
+
+        await().untilAsserted(() -> {
+            OilOrder foundOrder = oilOrderRepository.findById(oilOrder.getId()).get();
+            assertEquals(OilOrderStatusEnum.ALLOCATION_EXCEPTION, foundOrder.getOrderStatus());
+        });
+
+        assertNotNull(savedOilOrder);
+    }
+
+    @Test
+    void testNewToPickedUp() throws JsonProcessingException {
 
         OilDto oilDto = OilDto.builder().id(oilId).productCode("123").build();
         //OilPagedList oilOrderPagedList = new OilPagedList(Arrays.asList(oilDto));
@@ -102,6 +177,31 @@ public class OilOrderManagerImplIT {
         await().untilAsserted(() -> {
             OilOrder pickedOrder = oilOrderRepository.findById(oilOrder.getId()).get();
             assertEquals(OilOrderStatusEnum.PICKED_UP, pickedOrder.getOrderStatus());
+        });
+
+        assertNotNull(savedOilOrder);
+    }
+
+    @Test
+    void testNewToCancelled() throws JsonProcessingException {
+
+        OilDto oilDto = OilDto.builder().id(oilId).productCode("123").build();
+        //OilPagedList oilOrderPagedList = new OilPagedList(Arrays.asList(oilDto));
+        wireMockServer.stubFor(get(OilServiceImpl.OIL_PRODUCTCODE_PATH_V1 + "123").willReturn(okJson(objectMapper.writeValueAsString(oilDto))));
+        OilOrder oilOrder = createOilOrder();
+        OilOrder savedOilOrder = oilOrderManager.newOilOrder(oilOrder);
+        //Thread.sleep(5000); // Use Awaitility instead of sleep
+
+        await().untilAsserted(() -> {
+            OilOrder foundOrder = oilOrderRepository.findById(oilOrder.getId()).get();
+            assertEquals(OilOrderStatusEnum.ALLOCATED, foundOrder.getOrderStatus());
+        });
+
+        oilOrderManager.cancelOrder(oilOrder.getId());
+
+        await().untilAsserted(() -> {
+            OilOrder cancelledOrder = oilOrderRepository.findById(oilOrder.getId()).get();
+            assertEquals(OilOrderStatusEnum.CANCELLED, cancelledOrder.getOrderStatus());
         });
 
         assertNotNull(savedOilOrder);
