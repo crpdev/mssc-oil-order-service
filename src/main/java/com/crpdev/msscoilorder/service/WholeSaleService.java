@@ -30,9 +30,9 @@ public class WholeSaleService {
         this.oilOrderService = oilOrderService;
         this.oilOrderRepository = oilOrderRepository;
 
-        oilProductCodes.add(OilOrderBootstrap.OIL_PRODUCTCODE_1);
-        oilProductCodes.add(OilOrderBootstrap.OIL_PRODUCTCODE_2);
-        oilProductCodes.add(OilOrderBootstrap.OIL_PRODUCTCODE_3);
+        oilProductCodes.add(OilOrderBootstrap.OIL_PRODUCT_CODE_1);
+        oilProductCodes.add(OilOrderBootstrap.OIL_PRODUCT_CODE_2);
+        oilProductCodes.add(OilOrderBootstrap.OIL_PRODUCT_CODE_3);
     }
 
     @Transactional
