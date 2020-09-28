@@ -98,6 +98,25 @@ The service can be run in 3 modes
 | Local Docker | Single Node machine configuration using Docker |
 | Cloud Platform | Multi-node setup using Docker Swarm [2 replicas each] |
 
+# Docker
+
+All the images implemented as part of this project are available at my [Docker Hub](https://hub.docker.com/repositories) 
+
+| Service | Image |
+|:--|:--|
+| oil-service | crpdev/mssc-oil-service |
+| inventory | crpdev/mssc-oil-inventory-service |
+| order | crpdev/mssc-oil-order-service |
+| inventory-failover | crpdev/mssc-oil-inventory-failover |
+| eureka | crpdev/mssc-oil-eureka |
+| gateway | crpdev/mssc-oil-gateway |
+| config | crpdev/mssc-oil-config-server |
+| filebeat | crpdev/filebeat |
+| jms | vromero/activemq-artemis |
+| zipkin | openzipkin/zipkin |
+| elastic search | docker.elastic.co/elasticsearch/elasticsearch:7.9.1 |
+| kibana | docker.elastic.co/kibana/kibana:7.9.1 |
+
 # Port Configuration
 
 | Service | Port |
@@ -111,8 +130,7 @@ The service can be run in 3 modes
 | zipkin | 9411 |
 | elastic search | 9200 |
 | kibana | 5601 |
-| filebeat | |
-| config | |
+| config | 8888 |
 
 # Source Code
 
